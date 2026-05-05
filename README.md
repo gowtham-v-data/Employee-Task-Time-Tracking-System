@@ -4,8 +4,6 @@
 
 A comprehensive web-based system for managing tasks, tracking employee performance, and measuring productivity — with a built-in VS Code extension that automatically tracks how long employees spend coding on each task.
 
-## 🎯 Features
-
 ### Core Features
 - **Multi-Role System**: Admin, Manager, Team Lead, and Employee roles
 - **Task Management**: Create, assign, track, and manage tasks
