@@ -1,0 +1,89 @@
+{
+  "name": "employee-tracker-tasks",
+  "displayName": "Employee Tracker Tasks",
+  "description": "View assigned tasks and auto-track coding time in VS Code",
+  "version": "2.0.0",
+  "engines": { "vscode": "^1.60.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "employee-tracker",
+          "title": "My Tasks",
+          "icon": "resources/task-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "employee-tracker": [
+        {
+          "id": "employeeTrackerTasks",
+          "name": "Assigned Tasks"
+        }
+      ]
+    },
+    "commands": [
+      { "command": "employeeTracker.refreshTasks",   "title": "Refresh Tasks",          "icon": "$(refresh)" },
+      { "command": "employeeTracker.login",           "title": "Employee Tracker: Login" },
+      { "command": "employeeTracker.logout",          "title": "Employee Tracker: Logout" },
+      { "command": "employeeTracker.startTracking",   "title": "▶ Start Timer",          "icon": "$(play)" },
+      { "command": "employeeTracker.stopTracking",    "title": "⏹ Stop Timer",           "icon": "$(stop)" },
+      { "command": "employeeTracker.showTimerMenu",   "title": "Employee Tracker: Timer Menu" },
+      { "command": "employeeTracker.markInProgress",  "title": "Mark as In Progress" },
+      { "command": "employeeTracker.markCompleted",   "title": "Mark as Completed" },
+      { "command": "employeeTracker.viewTaskDetail",  "title": "View Task Details" }
+    ],
+    "menus": {
+      "view/title": [
+        { "command": "employeeTracker.refreshTasks", "when": "view == employeeTrackerTasks", "group": "navigation" },
+        { "command": "employeeTracker.stopTracking",  "when": "view == employeeTrackerTasks", "group": "navigation" }
+      ],
+      "view/item/context": [
+        { "command": "employeeTracker.startTracking",  "when": "view == employeeTrackerTasks && viewItem =~ /^task-/",          "group": "1_tracking@1" },
+        { "command": "employeeTracker.markInProgress", "when": "view == employeeTrackerTasks && viewItem == task-pending",       "group": "2_status@1" },
+        { "command": "employeeTracker.markCompleted",  "when": "view == employeeTrackerTasks && viewItem == task-in_progress",   "group": "2_status@2" },
+        { "command": "employeeTracker.viewTaskDetail", "when": "view == employeeTrackerTasks && viewItem =~ /^task-/",           "group": "3_detail@1" }
+      ]
+    },
+    "configuration": {
+      "title": "Employee Tracker",
+      "properties": {
+        "employeeTracker.apiUrl": {
+          "type": "string",
+          "default": "http://localhost:5000",
+          "description": "Employee Tracker backend API URL"
+        },
+        "employeeTracker.refreshInterval": {
+          "type": "number",
+          "default": 300000,
+          "description": "Task list refresh interval in milliseconds (default: 5 minutes)"
+        },
+        "employeeTracker.idleTimeout": {
+          "type": "number",
+          "default": 300000,
+          "description": "Idle timeout in milliseconds before timer pauses (default: 5 minutes)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.60.0",
+    "@types/node": "14.x",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^4.4.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}
