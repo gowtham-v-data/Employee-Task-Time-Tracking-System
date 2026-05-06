@@ -11,14 +11,19 @@ export const getEmployeeDashboard = async (req, res, next) => {
     // Get user stats
     const stats = await getUserStats(userId);
 
+    // Pre-fetch assigned task IDs once (reused across queries)
+    const assignedRows = await TaskAssignment.findAll({
+      where: { user_id: userId },
+      attributes: ['task_id'],
+      raw: true
+    });
+    const assignedIds = assignedRows.map(r => r.task_id);
+    const taskIdFilter = assignedIds.length > 0 ? assignedIds : [0];
+
     // Get upcoming deadlines (next 7 days)
     const upcomingDeadlines = await Task.findAll({
-      include: [{
-        model: TaskAssignment,
-        as: 'assignments',
-        where: { user_id: userId }
-      }],
       where: {
+        id: { [Op.in]: taskIdFilter },
         status: { [Op.in]: ['pending', 'in_progress'] },
         deadline: {
           [Op.between]: [new Date(), new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)]
@@ -36,13 +41,8 @@ export const getEmployeeDashboard = async (req, res, next) => {
         [sequelize.fn('DATE', sequelize.col('completed_at')), 'date'],
         [sequelize.fn('COUNT', sequelize.col('tasks.id')), 'count']
       ],
-      include: [{
-        model: TaskAssignment,
-        as: 'assignments',
-        where: { user_id: userId },
-        attributes: []
-      }],
       where: {
+        id: { [Op.in]: taskIdFilter },
         status: 'completed',
         completed_at: { [Op.gte]: thirtyDaysAgo }
       },
@@ -76,12 +76,10 @@ export const getEmployeeDashboard = async (req, res, next) => {
 
     // Get recent activity (last 10 tasks updated)
     const recentActivity = await Task.findAll({
-      include: [{
-        model: TaskAssignment,
-        as: 'assignments',
-        where: { user_id: userId }
-      }],
-      where: { is_deleted: false },
+      where: {
+        id: { [Op.in]: taskIdFilter },
+        is_deleted: false
+      },
       order: [['updated_at', 'DESC']],
       limit: 10
     });
@@ -146,7 +144,7 @@ export const getManagerDashboard = async (req, res, next) => {
 
     // Get employee performance scores
     const employees = await User.findAll({
-      where: { 
+      where: {
         role: { [Op.in]: ['employee', 'team_lead'] },
         is_active: true
       },
