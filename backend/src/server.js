@@ -33,8 +33,8 @@ app.use('/api/', apiLimiter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ 
-    success: true, 
+  res.json({
+    success: true,
     message: 'Server is running',
     timestamp: new Date().toISOString()
   });
@@ -57,13 +57,17 @@ const startServer = async () => {
   try {
     // Test database connection
     await testConnection();
-    
+
     // Sync database (in development only)
     if (process.env.NODE_ENV === 'development') {
       await sequelize.sync({ alter: true });
       console.log('✅ Database synchronized');
+    } else {
+      // In production, just test the connection
+      await sequelize.authenticate();
+      console.log('✅ Database connected');
     }
-    
+
     // Start listening
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);

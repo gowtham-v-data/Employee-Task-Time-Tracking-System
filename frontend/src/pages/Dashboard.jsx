@@ -22,7 +22,7 @@ ChartJS.register(
   PointElement, ArcElement, Title, Tooltip, Legend
 );
 
-const API = 'http://localhost:5000';
+const API = '';
 
 const Dashboard = () => {
   const { user } = useAuth();

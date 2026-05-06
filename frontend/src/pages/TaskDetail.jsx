@@ -25,7 +25,7 @@ const TaskDetail = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/tasks/${id}`, {
+      const response = await axios.get(`/api/tasks/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTask(response.data.data);
@@ -52,7 +52,7 @@ const TaskDetail = () => {
       setSubmittingComment(true);
       const token = localStorage.getItem('token');
       await axios.post(
-        `http://localhost:5000/api/tasks/${id}/comments`,
+        `/api/tasks/${id}/comments`,
         { text: commentText },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -71,7 +71,7 @@ const TaskDetail = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:5000/api/tasks/${id}`,
+        `/api/tasks/${id}`,
         editData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -87,7 +87,7 @@ const TaskDetail = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:5000/api/tasks/${id}`,
+        `/api/tasks/${id}`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -103,7 +103,7 @@ const TaskDetail = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`, {
+      await axios.delete(`/api/tasks/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       navigate('/tasks');

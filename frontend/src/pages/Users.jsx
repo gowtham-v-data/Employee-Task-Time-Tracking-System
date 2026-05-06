@@ -27,7 +27,7 @@ const Users = () => {
       if (searchTerm) params.search = searchTerm;
       if (roleFilter) params.role = roleFilter;
 
-      const response = await axios.get('http://localhost:5000/api/users', {
+      const response = await axios.get('/api/users', {
         headers: { Authorization: `Bearer ${token}` },
         params
       });
@@ -48,7 +48,7 @@ const Users = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:5000/api/users/${userId}`,
+        `/api/users/${userId}`,
         { is_active: false },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -63,7 +63,7 @@ const Users = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:5000/api/users/${userId}`,
+        `/api/users/${userId}`,
         { is_active: true },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -344,12 +344,12 @@ const UserFormModal = ({ user, onClose, onSuccess }) => {
 
       if (user) {
         // Update existing user
-        await axios.put(`http://localhost:5000/api/users/${user.id}`, payload, {
+        await axios.put(`/api/users/${user.id}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
       } else {
         // Create new user
-        await axios.post('http://localhost:5000/api/users', payload, {
+        await axios.post('/api/users', payload, {
           headers: { Authorization: `Bearer ${token}` }
         });
       }

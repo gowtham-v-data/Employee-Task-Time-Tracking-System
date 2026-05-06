@@ -31,7 +31,7 @@ const Profile = () => {
   const fetchUserStats = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/users/${user.id}`, {
+      const response = await axios.get(`/api/users/${user.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setStats(response.data.data.statistics);
@@ -50,7 +50,7 @@ const Profile = () => {
       const token = localStorage.getItem('token');
       
       const response = await axios.put(
-        `http://localhost:5000/api/users/${user.id}`,
+        `/api/users/${user.id}`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -87,7 +87,7 @@ const Profile = () => {
       const token = localStorage.getItem('token');
       
       await axios.post(
-        'http://localhost:5000/api/auth/change-password',
+        '/api/auth/change-password',
         {
           currentPassword: passwordData.currentPassword,
           newPassword: passwordData.newPassword

@@ -3,8 +3,8 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
-// Set axios base URL
-axios.defaults.baseURL = 'http://localhost:5000';
+// Set axios base URL from environment variable
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || '';
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -44,11 +44,11 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const response = await axios.post('/api/auth/login', { email, password });
     const { token, user } = response.data.data;
-    
+
     localStorage.setItem('token', token);
     setToken(token);
     setUser(user);
-    
+
     return response.data;
   };
 

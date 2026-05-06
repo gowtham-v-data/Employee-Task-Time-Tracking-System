@@ -61,12 +61,14 @@ export const getTasks = async (req, res, next) => {
 
     // Employee: only see their assigned tasks
     if (req.user.role === 'employee') {
-      include.push({
-        model: TaskAssignment,
-        as: 'assignments',
+      const assignedTaskIds = await TaskAssignment.findAll({
         where: { user_id: req.user.id },
-        required: true
+        attributes: ['task_id'],
+        raw: true
       });
+
+      const assignedIds = assignedTaskIds.map(a => a.task_id);
+      where.id = { [Op.in]: assignedIds.length > 0 ? assignedIds : [0] };
     }
 
     // Team Lead: see their created tasks + assigned tasks

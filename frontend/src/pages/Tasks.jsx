@@ -45,7 +45,7 @@ const Tasks = () => {
         if (params[key] === '') delete params[key];
       });
 
-      const response = await axios.get('http://localhost:5000/api/tasks', {
+      const response = await axios.get('/api/tasks', {
         headers: { Authorization: `Bearer ${token}` },
         params
       });
@@ -359,7 +359,7 @@ const CreateTaskModal = ({ onClose, onSuccess }) => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/users', {
+      const response = await axios.get('/api/users', {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log('Fetched users:', response.data);
@@ -390,7 +390,7 @@ const CreateTaskModal = ({ onClose, onSuccess }) => {
       setError(null);
       const token = localStorage.getItem('token');
 
-      await axios.post('http://localhost:5000/api/tasks', formData, {
+      await axios.post('/api/tasks', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
